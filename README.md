@@ -1,149 +1,134 @@
 # Vascendia
 
-Monorepo für die Vascendia-Webanwendung mit React, TypeScript, Vite, Docker und GitHub Actions.
+Plattform zum Tracken von Challenges, Sessions, Goals und Analytics — mit Clean Architecture im Backend und Feature-basiertem Frontend.
 
 ## Projektstruktur
 
 ```
 Vascendia/
-├── apps/
-│   └── web/                 # React + TypeScript + Vite (Hauptanwendung)
-├── packages/
-│   ├── ui/                  # Wiederverwendbare UI-Komponenten
-│   ├── config/              # Gemeinsame TypeScript-Konfiguration
-│   └── types/               # Gemeinsame TypeScript-Typen
-├── docker/
-│   └── web/                 # Production-Docker-Image (Node → Nginx)
-├── .github/
-│   └── workflows/           # CI/CD-Pipelines
-├── docker-compose.yml
-├── vascendia.code-workspace # VS Code Multi-Root-Workspace
-└── package.json             # npm Workspaces (Root)
+├── backend/
+│   ├── pyproject.toml
+│   ├── src/challenge_myself/
+│   │   ├── domain/           # Entities, Value Objects
+│   │   ├── application/      # Use Cases / Services
+│   │   ├── infrastructure/   # DB, externe APIs
+│   │   ├── presentation/     # HTTP (FastAPI)
+│   │   ├── config/
+│   │   └── main.py
+│   └── tests/
+├── frontend/
+│   ├── src/
+│   │   ├── app/              # App-Shell, Routing
+│   │   ├── features/         # challenges, sessions, goals, analytics
+│   │   ├── components/
+│   │   ├── api/
+│   │   └── types/
+│   └── tests/
+├── contracts/
+│   └── openapi.yaml          # API-Vertrag (Single Source of Truth)
+├── config/
+│   ├── .env.example
+│   └── docker/
+├── scripts/
+└── docker-compose.yml
 ```
-
-## Voraussetzungen
-
-- Node.js >= 20
-- npm >= 10
-- Docker (optional, für Production-Builds)
-- Visual Studio Code (empfohlen)
 
 ## Erste Schritte
 
-```bash
-# Abhängigkeiten installieren
-npm install
+### 1. Setup
 
-# Entwicklungsserver starten
+```powershell
+# Alles installieren (Frontend + Backend venv)
+npm run setup
+```
+
+Oder manuell:
+
+```powershell
+cd frontend && npm install
+cd ..\backend
+python -m venv .venv
+.\.venv\Scripts\pip install -e ".[dev]"
+```
+
+### 2. Umgebungsvariablen
+
+```powershell
+copy config\.env.example .env
+copy config\.env.example frontend\.env
+```
+
+### 3. Entwicklung starten
+
+Zwei Terminals:
+
+```powershell
+# Terminal 1 — Backend (Port 8000)
+npm run dev:backend
+
+# Terminal 2 — Frontend (Port 5173)
+npm run dev:frontend
+```
+
+Oder mit dem Dev-Script (startet Backend in neuem Fenster):
+
+```powershell
 npm run dev
 ```
 
-Die App läuft dann unter [http://localhost:5173](http://localhost:5173).
-
-## Wichtige Befehle
-
-| Befehl | Beschreibung |
-|--------|--------------|
-| `npm run dev` | Vite-Dev-Server starten |
-| `npm run build` | Production-Build aller Workspaces |
-| `npm run typecheck` | TypeScript prüfen |
-| `npm run lint` | Linting (oxlint) |
-| `npm run test` | Tests ausführen |
-| `npm run preview` | Production-Build lokal previewen |
-
-Einzelne Workspace-Befehle:
-
-```bash
-npm run dev -w web
-npm run build -w web
-```
+- Frontend: [http://localhost:5173](http://localhost:5173)
+- Backend API: [http://localhost:8000/api/v1/health](http://localhost:8000/api/v1/health)
+- OpenAPI Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## VS Code
 
-Öffne das Projekt am besten über die Workspace-Datei:
-
-```
-vascendia.code-workspace
-```
-
-Damit siehst du Root, Web-App und Shared Packages als separate Ordner in der Seitenleiste.
-
-Empfohlene Extensions werden automatisch vorgeschlagen (Oxc, Prettier).
+Öffne `vascendia.code-workspace` — du siehst Frontend, Backend und Contracts als separate Ordner.
 
 ## Docker (Production)
 
-Für Development nutze `npm run dev` direkt auf dem Host — das ist schneller als Docker.
-
-Docker ist für reproduzierbare Production-Builds gedacht:
-
-```bash
-# Image bauen
-docker build -f docker/web/Dockerfile -t vascendia-web .
-
-# Oder mit docker compose
+```powershell
 docker compose up --build
 ```
 
-Die App ist dann unter [http://localhost:8080](http://localhost:8080) erreichbar.
+- Frontend: [http://localhost:8080](http://localhost:8080)
+- Backend: [http://localhost:8000](http://localhost:8000)
 
-## GitHub CI/CD
+## Tests
 
-Beim Push oder Pull Request auf `main` / `develop` läuft automatisch:
+```powershell
+# Frontend
+npm run test
 
-1. `npm ci` — saubere Installation
-2. TypeScript-Prüfung
-3. Linting
-4. Tests
-5. Build
-
-Auf `main` wird zusätzlich ein Docker-Image gebaut (ohne Push in eine Registry — das kann später ergänzt werden).
-
-### Ersten Push machen
-
-Das Repository ist bereits mit GitHub verbunden:
-
-```bash
-git add .
-git commit -m "chore: initialize monorepo with React, Docker and CI"
-git push origin main
+# Backend
+npm run test:backend
 ```
 
-Danach siehst du unter **GitHub → Actions** die laufenden Pipelines.
+## CI/CD (GitHub Actions)
 
-## Git Flow (optional)
+Bei Push/PR auf `main` oder `develop`:
 
-Für strukturierte Branch-Entwicklung:
+| Job | Prüfungen |
+|-----|-----------|
+| **frontend** | typecheck, lint, test, build |
+| **backend** | ruff, pytest |
+| **docker** (main) | Backend- + Frontend-Image bauen |
 
-```bash
-git flow init
-```
+## API-Vertrag
 
-Typische Einstellungen:
+Der Vertrag liegt in `contracts/openapi.yaml`. Backend-Routen und Frontend-Typen sollten daran ausgerichtet werden.
 
-- Production: `main`
-- Development: `develop`
-- Features: `feature/`
-- Releases: `release/`
-- Hotfixes: `hotfix/`
+## Architektur-Hinweise
 
-Beispiel:
+**Backend (Clean Architecture):**
+- `domain/` — reine Geschäftslogik, keine Framework-Abhängigkeiten
+- `application/` — Use Cases orchestrieren Domain
+- `infrastructure/` — Persistenz, externe Dienste
+- `presentation/http/` — FastAPI Routes, Schemas, Middleware
 
-```bash
-git flow feature start login
-# ... arbeiten ...
-git flow feature finish login
-```
-
-## Shared Packages nutzen
-
-In `apps/web` sind bereits angebunden:
-
-```typescript
-import type { AppName } from '@vascendia/types'
-import { Button } from '@vascendia/ui'
-```
-
-Neue Komponenten gehören in `packages/ui`, gemeinsame Typen in `packages/types`.
+**Frontend (Feature-Slices):**
+- `features/challenges`, `sessions`, `goals`, `analytics` — je Feature eigene UI + Logik
+- `api/` — HTTP-Client zum Backend
+- `types/` — TypeScript-Typen (an OpenAPI angelehnt)
 
 ## Lizenz
 

@@ -1,9 +1,0 @@
-{
-  "extends": "@vascendia/config/tsconfig.base.json",
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "lib": ["ES2023", "DOM"],
-    "noEmit": true
-  },
-  "include": ["src"]
-}
