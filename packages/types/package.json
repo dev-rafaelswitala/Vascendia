@@ -1,0 +1,16 @@
+{
+  "name": "@vascendia/types",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@vascendia/config": "*",
+    "typescript": "~6.0.2"
+  }
+}
