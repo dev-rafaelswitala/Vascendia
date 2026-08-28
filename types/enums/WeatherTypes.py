@@ -1,0 +1,23 @@
+from enum import Enum
+
+class WeatherTypes(str, Enum):
+    CLOUD = "cloud"
+    COLD = "cold"
+    DRIZZLE = "drizzle"
+    DRY = "dry"
+    FOGGY = "foggy"
+    HAIL = "hail"
+    HEAT = "heat"
+    HUMID = "humid"
+    FREEZING = "freezing"
+    FRESH_AIR = "fresh_air"
+    MIST = "mist"
+    OVERCAST = "overcast"
+    PARTLY_CLOUD = "partly_cloud"
+    RAIN = "rain"
+    SLEET = "sleet"
+    SNOW = "snow"
+    STORM = "storm"
+    SUNN = "sunn"
+    THUNDERSTORM = "thunderstorm"
+    WIND = "wind"
