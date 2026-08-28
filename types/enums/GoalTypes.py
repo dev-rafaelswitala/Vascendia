@@ -1,0 +1,41 @@
+from enum import Enum
+
+class GoalTypes(str, Enum):
+    MORE_THAN = "more_than"                             # Mehr als X
+    LESS_THAN = "less_then"                             # Weniger als X
+    AVOID = "avoid"                                     # Ganz vermeiden
+    FREQUENCY_EXACT = "frequency_exact"                 # Genau X-mal pro Periode
+    FREQUENCY_MIN = "frequency_min"                     # Mindestens X-mal
+    FREQUENCY_MAX = "frequency_max"                     # Maximal X-mal
+    STREAK = "streak"                                   # X Tage in Folge
+    INCREASE_DAILY = "increase_daily"                   # Täglich X mehr bis Tag Y
+    DECREASE_DAILY = "decrease_daily"                   # Täglich X weniger bis Tag Y
+    AVERAGE_ABOVE = "average_above"                     # Durchschnitt über X
+    AVERAGE_BELOW = "average_below"                     # Durchschnitt unter X
+    CONDITIONAL = "conditional"                         # X erreichen unter Bedingung Y
+    PERSONAL_BEST = "personal_best"                     # neuer Rekord?
+    MILESTONES = "milestones"                           # Selbstdefinierte oder vorgegebene Milestones
+    DURATION_MIN = "duration_min"                       # Mindestens X Zeit pro Session
+    DURATION_MAX = "duration_max"                       # Maximal X Zeit
+    DURATION_EXACT = "duration_exact"                   # Genau X Zeit
+    TOTAL_DURATION = "total_duration"                   # Gesamtzeit in Periode erreichen
+    TIME_WINDOW = "time_window"                         # Nur in Zeitfenster (z.B. morgens)
+    DEADLINE = "deadline"                               # Ziel bis Zeitpunkt X erreichen
+    TARGET_VALUE = "target_value"                       # Zielwert erreichen (z.B. 10km)
+    DELTA_INCREASE = "delta_increase"                   # Steigerung um X (nicht täglich!)
+    DELTA_DECREASE = "delta_decrease"                   # Reduktion um X
+    PERCENT_CHANGE = "percent_change"                   # Veränderung um X %
+    CONSISTENCY = "consistency"                         # geringe Varianz / stabil bleiben
+    STREAK_WITH_TOLERANCE = "streak_with_tolerance"     # Streak mit erlaubten Aussetzern
+    NON_CONSECUTIVE_COUNT = "non_consecutive_count"     # X-mal, egal wann
+    RECURRENCE_PATTERN = "recurrence_pattern"           # z.B. Mo/Mi/Fr
+    RANGE_TARGET = "range_target"                       # Wert in Bereich halten
+    IMPROVEMENT_SCORE = "improvement_score"             # subjektive Verbesserung
+    PEAK_STATE = "peak_state"                           # Zustand X erreichen (Flow etc.)
+    LIMIT_STATE = "limit_state"                         # Zustand unter X halten (Stress etc.)
+    TRIGGER_BASED = "trigger_based"                     # wenn X → dann Y tun
+    WEIGHTED_SCORE = "weighted_score"                   # gewichtete Bewertung
+    POINTS = "points"                                   # Punktesystem erreichen
+    ACHIEVEMENT = "achievement"                         # einmaliges Ziel
+    CHALLENGE = "challenge"                             # zeitlich begrenzte Challenge
+    RECOVERY_GOAL = "recovery_goal"                     # nach Rückfall zurückkommen
